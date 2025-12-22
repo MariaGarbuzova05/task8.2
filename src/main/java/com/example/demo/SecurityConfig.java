@@ -16,8 +16,12 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http, UserDetailsService userDetailsService) throws Exception {
         http
+                .csrf(csrf -> csrf
+                        .ignoringRequestMatchers("/api/**") // Отключаем CSRF для REST API
+                )
                 .authorizeHttpRequests(authz -> authz
                         .requestMatchers("/", "/login", "/register", "/css/**", "/js/**").permitAll()
+                        .requestMatchers("/api/**").permitAll() // Разрешаем доступ к REST API без аутентификации
                         .requestMatchers("/attendance/add", "/attendance/save", "/attendance/edit/**", "/attendance/delete/**").hasRole("ADMIN")
                         .anyRequest().authenticated()
                 )
