@@ -15,7 +15,6 @@ public class AuthController {
 
     private final UserService userService;
 
-    // Используем конструктор вместо @Autowired для поля
     @Autowired
     public AuthController(UserService userService) {
         this.userService = userService;
@@ -37,16 +36,32 @@ public class AuthController {
                                BindingResult result,
                                Model model,
                                RedirectAttributes redirectAttributes) {
+        System.out.println("=== REGISTRATION ATTEMPT ===");
+        System.out.println("Username: " + user.getUsername());
+        System.out.println("Password: " + (user.getPassword() != null ? "[SET]" : "[NULL]"));
+        System.out.println("Role: " + user.getRole());
+        System.out.println("Validation errors: " + result.hasErrors());
+
         if (result.hasErrors()) {
+            System.out.println("Validation errors details:");
+            result.getAllErrors().forEach(error -> System.out.println(" - " + error.getDefaultMessage()));
             return "register";
         }
 
         try {
-            user.setRole("ROLE_USER"); // По умолчанию регистрируем как USER
+            // Устанавливаем роль автоматически
+            user.setRole("ROLE_USER");
+            System.out.println("Role set to: ROLE_USER");
+
+            System.out.println("Calling userService.registerUser()...");
             userService.registerUser(user);
+            System.out.println("User registered successfully!");
+
             redirectAttributes.addFlashAttribute("successMessage", "Registration successful! Please login.");
             return "redirect:/login";
         } catch (RuntimeException e) {
+            System.out.println("Registration failed: " + e.getMessage());
+            e.printStackTrace();
             model.addAttribute("errorMessage", e.getMessage());
             return "register";
         }

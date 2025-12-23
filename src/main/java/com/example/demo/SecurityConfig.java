@@ -17,11 +17,11 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http, UserDetailsService userDetailsService) throws Exception {
         http
                 .csrf(csrf -> csrf
-                        .ignoringRequestMatchers("/api/**") // Отключаем CSRF для REST API
+                        .ignoringRequestMatchers("/api/**", "/register") // Убедитесь, что /register здесь
                 )
                 .authorizeHttpRequests(authz -> authz
-                        .requestMatchers("/", "/login", "/register", "/css/**", "/js/**").permitAll()
-                        .requestMatchers("/api/**").permitAll() // Разрешаем доступ к REST API без аутентификации
+                        .requestMatchers("/", "/login", "/register", "/css/**", "/js/**", "/images/**", "/api/debug/**").permitAll() // Добавили /api/debug/**
+                        .requestMatchers("/api/**").permitAll()
                         .requestMatchers("/attendance/add", "/attendance/save", "/attendance/edit/**", "/attendance/delete/**").hasRole("ADMIN")
                         .anyRequest().authenticated()
                 )
@@ -31,7 +31,10 @@ public class SecurityConfig {
                         .permitAll()
                 )
                 .logout(logout -> logout
-                        .logoutSuccessUrl("/login?logout")
+                        .logoutUrl("/logout")
+                        .logoutSuccessUrl("/login?logout=true")
+                        .invalidateHttpSession(true)
+                        .deleteCookies("JSESSIONID")
                         .permitAll()
                 )
                 .userDetailsService(userDetailsService);

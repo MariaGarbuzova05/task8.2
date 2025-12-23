@@ -12,7 +12,10 @@
         <h1>Attendance Records</h1>
         <div>
             <span sec:authentication="name" class="me-3"></span>
-            <a th:href="@{/logout}" class="btn btn-outline-secondary btn-sm">Logout</a>
+            <!-- Используем форму для POST запроса logout -->
+            <form th:action="@{/logout}" method="post" style="display: inline;">
+                <button type="submit" class="btn btn-outline-secondary btn-sm">Logout</button>
+            </form>
         </div>
     </div>
 

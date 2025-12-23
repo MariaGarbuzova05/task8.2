@@ -23,8 +23,9 @@ public class DataInitializer implements CommandLineRunner {
             User admin = new User();
             admin.setUsername("admin");
             admin.setPassword(passwordEncoderProvider.getPasswordEncoder().encode("admin"));
-            admin.setRole("ROLE_ADMIN");
+            admin.setRole("ROLE_ADMIN"); // Добавляем префикс ROLE_
             userRepository.save(admin);
+            System.out.println("Default admin user created: admin/admin");
         }
 
         // Создаем тестового пользователя
@@ -32,8 +33,12 @@ public class DataInitializer implements CommandLineRunner {
             User user = new User();
             user.setUsername("user");
             user.setPassword(passwordEncoderProvider.getPasswordEncoder().encode("user"));
-            user.setRole("ROLE_USER");
+            user.setRole("ROLE_USER"); // Добавляем префикс ROLE_
             userRepository.save(user);
+            System.out.println("Test user created: user/user");
         }
+
+        // Выводим информацию о созданных пользователях
+        System.out.println("Total users in database: " + userRepository.count());
     }
 }

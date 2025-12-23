@@ -24,8 +24,7 @@ public class User {
     @Column(nullable = false)
     private String password;
 
-    @NotBlank(message = "Role is required")
-    @Column(nullable = false)
+    @Column(nullable = false) // Убрали @NotBlank - роль будет устанавливаться автоматически
     private String role;
 
     public User() {}
@@ -36,7 +35,7 @@ public class User {
         this.role = role;
     }
 
-    // Геттеры и сеттеры
+    // Геттеры и сеттеры остаются без изменений
     public Long getId() {
         return id;
     }
